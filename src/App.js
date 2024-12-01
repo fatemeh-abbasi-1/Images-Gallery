@@ -10,6 +10,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const fetchImage = async function () {
+    setLoading(true);
     const respanse = await axios.get(
       `https://picsum.photos/v2/list?page=${page}&limit=10`
     );
@@ -25,15 +26,15 @@ function App() {
   const handleScroll = () => {
     if (
       document.body.scrollHeight - 300 <
-      window.scrollY + window.innerHeight
+      window.scrollY + window.innerHeight && page < 3
     ) {
       setPage(page + 1);
-      setLoading(true);
     }
   };
   useEffect(() => {
     fetchImage();
   }, [page]);
+
 
   window.addEventListener("scroll", handleScroll);
 
