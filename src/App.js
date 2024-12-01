@@ -8,15 +8,24 @@ function App() {
   const [page, setPage] = useState(2);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
 
   const fetchImage = async function () {
     setLoading(true);
-    const respanse = await axios.get(
-      `https://picsum.photos/v2/list?page=${page}&limit=10`
-    );
-
-    setItems([...items, ...respanse.data]);
-    setLoading(false);
+    let newItems = [];
+    newItems = items;
+    try {
+      const respanse = await axios.get(
+        `https://picsum.photos/v2/list?page=${page}&limit=10`
+      );
+      newItems.push(...respanse.data);
+      setItems(newItems);
+      console.log(newItems);
+      setLoading(false);
+    } catch {
+      setFetchError(true);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -25,8 +34,8 @@ function App() {
 
   const handleScroll = () => {
     if (
-      document.body.scrollHeight - 300 <
-      window.scrollY + window.innerHeight && page < 3
+      document.body.scrollHeight - 300 < window.scrollY + window.innerHeight &&
+      page <= 6
     ) {
       setPage(page + 1);
     }
@@ -35,13 +44,12 @@ function App() {
     fetchImage();
   }, [page]);
 
-
   window.addEventListener("scroll", handleScroll);
 
   return (
     <div className="App">
       <Header></Header>
-      <Content items={items} loading={loading}></Content>
+      <Content items={items} loading={loading} fetchError={fetchError}></Content>
     </div>
   );
 }
