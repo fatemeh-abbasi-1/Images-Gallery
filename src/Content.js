@@ -1,8 +1,11 @@
-import InfoMobile from "./InfoMobile";
-function Content() {
+import RenderImg from './RenderImg';
+
+function Content({ items , loading}) {
+  
   return (
     <div className="content">
-        <InfoMobile></InfoMobile>
+      {loading && <h1>loading...</h1>}
+     {items.map((item) => <RenderImg item={item}/>)}
     </div>
   );
 }
