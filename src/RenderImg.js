@@ -1,7 +1,7 @@
-function RenderImages({ item}) {
+function RenderImages({ item }) {
   return (
     <div>
-      <img src={item.download_url} className="img" key={item.id}></img>
+      <img src={item.download_url} className="img" key={item.id} />
     </div>
   );
 }
