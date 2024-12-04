@@ -18,6 +18,7 @@ export const DataProvider = ({ children }) => {
         `https://picsum.photos/v2/list?page=${page}&limit=10`
       );
       newItems.push(...respanse.data);
+      console.log(newItems);
       setItems(newItems);
       setLoading(false);
     } catch {
@@ -26,14 +27,10 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    fetchImage();
-  }, []);
-
   const handleScroll = () => {
     if (
       document.body.scrollHeight - 300 < window.scrollY + window.innerHeight &&
-      page <= 6
+      page <= 9
     ) {
       setPage(page + 1);
     }
