@@ -3,7 +3,7 @@ import { useContext } from "react";
 import DataContext from "./context/DataCantext";
 
 function Content() {
-  const { items, loading, fetchError } = useContext(DataContext);
+  const { data, loading, fetchError } = useContext(DataContext);
   return (
     <div className="content">
       {loading && <h1 className="color-massage">loading...</h1>}
@@ -12,7 +12,7 @@ function Content() {
           Somthing went wrong , please try again...{" "}
         </h1>
       )}
-      {!fetchError && items.map((item) => <RenderImg item={item} />)}
+      {!fetchError && data.map((item) => <RenderImg item={item} key={item.id}/>)}
     </div>
   );
 }

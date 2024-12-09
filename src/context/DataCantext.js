@@ -1,48 +1,35 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import useAxiosFetch from "../hooks/useAxiosFetch";
 
 const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
-  const [page, setPage] = useState(2);
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [fetchError, setFetchError] = useState(null);
+  const [page, setPage] = useState(1);
 
-  const fetchImage = async function () {
-    setLoading(true);
-    let newItems = [];
-    newItems = items;
-    try {
-      const respanse = await axios.get(
-        `https://picsum.photos/v2/list?page=${page}&limit=10`
-      );
-      newItems.push(...respanse.data);
-      console.log(newItems);
-      setItems(newItems);
-      setLoading(false);
-    } catch {
-      setFetchError(true);
-      setLoading(false);
-    }
-  };
+  const { isLoading, fetchError, data } = useAxiosFetch(
+    `https://picsum.photos/v2/list?page=${page}&limit=10`,
+    page
+  );
 
   const handleScroll = () => {
     if (
-      document.body.scrollHeight - 300 < window.scrollY + window.innerHeight &&
-      page <= 9
-    ) {
-      setPage(page + 1);
-    }
+      window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight &&
+      page <= 6
+    )
+      return;
+    setPage((prevPage) => prevPage + 1);
   };
+
   useEffect(() => {
-    fetchImage();
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [page]);
 
-  window.addEventListener("scroll", handleScroll);
-
   return (
-    <DataContext.Provider value={{ items, loading, fetchError }}>
+    <DataContext.Provider value={{ data, isLoading, fetchError }}>
       {children}
     </DataContext.Provider>
   );
